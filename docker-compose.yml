@@ -1,0 +1,26 @@
+# RUN WITH: docker-compose -f docker-compose.yml -p tdd up -d
+version: '3.5'
+
+services:
+    backend:
+        build:
+           context: ./build/apache-php
+           dockerfile: Dockerfile_71
+        container_name: homework
+        ports:
+         - 7000:80
+        environment:
+         - APACHE_RUN_USER=www-data
+         - APACHE_RUN_GROUP=www-data
+         - APACHE_DOCUMENT_ROOT=/data/backend/public
+         - APACHE_USE_STANDARD_PORT=0
+         - XDEBUG_REMOTE_HOST=192.168.8.102
+        volumes:
+          - type: bind
+            source: ./
+            target: /data/backend
+
+networks:
+    default:
+        name: tdd-bridge
+        driver: bridge
